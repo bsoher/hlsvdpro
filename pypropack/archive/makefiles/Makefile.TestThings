@@ -1,0 +1,39 @@
+# Makefile for HLSVD
+# Created by Brian J. Soher
+# Copyright & license info for this Makefile (not HLSVD itself) is in the
+# Vespa LICENSE file.
+
+ifeq '$(findstring ;,$(PATH))' ';'
+    UNAME := Windows
+else
+    UNAME := $(shell uname 2>/dev/null || echo Unknown)
+    UNAME := $(patsubst CYGWIN%,Cygwin,$(UNAME))
+    UNAME := $(patsubst MSYS%,MSYS,$(UNAME))
+    UNAME := $(patsubst MINGW%,MSYS,$(UNAME))
+endif
+
+# BITS can be 32 or 64 and controls the bit mode of the binary.
+BITS = 64
+ARCH = -m$(BITS)
+OPTIMIZE = -O
+DISABLED_WARNINGS = -Wno-unused
+WARNINGS = -Wall $(DISABLED_WARNINGS)
+FFLAGS = $(OPTIMIZE) $(WARNINGS) $(ARCH)
+
+
+PYDIR := $(shell python -c "from __future__ import print_function;import sys; print(sys.executable)")
+PYDIR := $(subst python.exe,,$(PYDIR))
+PYDIR := $(subst \,/,$(PYDIR))
+PYMIN := $(shell python -c "from __future__ import print_function;import sys; print(sys.version_info.minor)")
+PYMAJ := $(shell python -c "from __future__ import print_function;import sys; print(sys.version_info.major)")
+PYVER := $(PYMAJ).$(PYMIN)
+PYVER2 := $(PYMAJ)$(PYMIN)
+
+all:
+	@echo $(UNAME)  $(PYDIR)  $(PYVER)  $(PYVER2)
+    
+    
+
+
+
+

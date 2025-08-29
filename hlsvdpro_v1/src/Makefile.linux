@@ -1,0 +1,121 @@
+# Makefile for HLSVD
+# Created by the Vespa team
+# Copyright & license info for this Makefile (not HLSVDPRO itself) is in the
+# LICENSE file.
+
+# = About libgfortran =
+# This Makefile is designed to work on CentOS 5.11. We use CentOS 5.11 because
+# we want to build broadly compatible Linux wheels. The GFortran compiler
+# on CentOS 5.11 (GCC 4.1.1) uses libgfortran.so.1 which isn't present
+# on a lot of modern systems (e.g. Ubuntu 14.04 LTS). As a result, we assume
+# we need to supply it alongside hlsvdpro.so, and we do so in the 'dist' step.
+# If you're building on/for a more modern Linux that uses libgfortran.so.3,
+# you can remove the reference to libgfortran.so.1.
+
+
+# BITS can be 32 or 64 and controls the bit mode of the binary.
+BITS = 64
+ARCH = -m$(BITS)
+OPTIMIZE = -O
+DISABLED_WARNINGS = -Wno-unused
+WARNINGS = -Wall $(DISABLED_WARNINGS)
+FFLAGS = -fPIC $(OPTIMIZE) $(WARNINGS) $(ARCH)
+# When building LAPACK we force ffpe-trap to be blank (disabled) because
+# LAPACK's make file says, "LAPACK is designed to check for and handle these
+# cases internally and enabling these traps will likely cause LAPACK to crash."
+# ref: https://icl.cs.utk.edu/svn/lapack-dev/lapack/trunk/CMAKE/CheckLAPACKCompilerFlags.cmake
+LAPACK_FFLAGS =     -ffpe-trap=    $(FFLAGS)
+
+
+BIN_DIR = ./bin
+DIST_TARGET_DIR = ../bin/
+TARGET_LIB_NAME = $(BIN_DIR)/libhlsvdpro.so
+
+
+
+all: $(TARGET_LIB_NAME)
+
+
+# Create the BIN_DIR if it doesn't exist
+$(BIN_DIR): force
+	@if (test ! -d $(BIN_DIR)) then \
+        mkdir -p $(BIN_DIR); \
+	fi
+
+
+# Pattern rule for turning lapack/*.f into object files
+$(BIN_DIR)/%.o: lapack/%.f
+	gfortran $(LAPACK_FFLAGS) -c $< -o $@
+
+
+# Pattern rule for turning HLSVD *.f into object files
+$(BIN_DIR)/%.o: %.f
+	gfortran $(FFLAGS) -c $< -o $@
+
+
+# Variables to define lapack object files in the BIN_DIR
+LAPACK_SRCS := $(wildcard lapack/*.f)
+LAPACK_OBJS := $(addsuffix .o,$(basename $(notdir $(LAPACK_SRCS))))
+LAPACK_OBJS := $(addprefix $(BIN_DIR)/,$(LAPACK_OBJS))
+
+
+# Rule for building lapack.a
+$(BIN_DIR)/lapack.a: $(BIN_DIR) $(LAPACK_OBJS)
+	ar -r $(BIN_DIR)/lapack.a $(LAPACK_OBJS)
+
+lapack: $(BIN_DIR)/lapack.a
+
+
+# SRCS lists the source (Fortran) files for the HLSVD code.
+# OBJS are the compiled versions of these files that land in the BIN_DIR
+SRCS := aprodw.f blasext.f hlsvdpro.f lanczopw.f printstat.f \
+		zsafescal.f zgemm_ovwr.f zget0w.f zlanbprow.f zlansvdw.f zreorth.f
+
+OBJS := $(addprefix $(BIN_DIR)/, $(addsuffix .o,$(basename $(SRCS))))
+
+# Under Linux, we link neither the gfortran nor the fftw3 libs statically.
+# We rely on the user to install them. We pass $ORIGIN as the rpath so that
+# if there are libraries we want to distribute alongside this .so (like
+# libgfortran.so.1) we can do so.
+$(TARGET_LIB_NAME): $(BIN_DIR) $(OBJS) lapack
+	gfortran -shared     										\
+			 -fPIC												\
+             -Wall $(ARCH)                                      \
+             -Wl,-rpath,'$$ORIGIN'								\
+             -o $(TARGET_LIB_NAME)                              \
+             $(OBJS)											\
+             $(BIN_DIR)/lapack.a                                \
+             -lfftw3
+
+
+# In Vespa we only use the library, not an executable. But the executable
+# is useful for stepping through with gdb so I've used it occasionally.
+# See hlsvdmain in hlsvdpro.f for details.
+exe: $(BIN_DIR) $(OBJS) lapack
+	gfortran -static-libgcc 					   	\
+	         -Wall $(ARCH)                      	\
+	         -o hlsvdpro							\
+	   	 	 $(OBJS)								\
+		 	 $(BIN_DIR)/lapack.a 					\
+		 	 -lgfortran								\
+		 	 -lfftw3
+	chmod +x hlsvdpro
+
+
+# depcheck lists the runtime libraries that the target relies on.
+depcheck: $(TARGET_LIB_NAME)
+	ldd $(TARGET_LIB_NAME)
+
+
+# See comment about libgfortran above for why we copy it into the
+# distribution directory.
+dist: $(TARGET_LIB_NAME)
+	rm -rf $(DIST_TARGET_DIR)/*
+	cp $(TARGET_LIB_NAME) $(DIST_TARGET_DIR)
+	cp `locate libgfortran.so.1.0.0` $(DIST_TARGET_DIR)/libgfortran.so.1
+
+
+clean:
+	rm -rf $(BIN_DIR)
+
+force:

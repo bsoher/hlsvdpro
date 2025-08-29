@@ -1,0 +1,56 @@
+Version 2.0.0 - 17 June, 2020
+------------------------------------------------------------------------------
+This is a realease of HLSVDPRO version 2.0.0
+
+HLSVDPRO 2.0.0 has been adaptated to use PROPACK library version 2.1 to 
+implement the HLSVDPRO algorithm as described in:
+
+  T. Laudadio, N. Mastronardi, L. Vanhamme, P. Van Hecke and S. Van Huffel, 
+  "Improved Lanczos algorithms for blackbox MRS data quantitation", Journal of 
+  Magnetic Resonance, Volume 157, pages 292-297, 2002. 
+
+The python wrapper used to access the PROPACK library was adapted from the 
+pypropack repository create by Jake van der Plas on Github: 
+  https://github.com/jakevdp/pypropack 
+with extensions by Brian J Soher to include the matrix-vector product 
+calculation within the Fortran code. 
+
+The HLSVDPRO version 1.0.1 wheels will remain on PyPI in case users need to 
+downgrade for any reason.
+
+The HLSVDPRO version 2.0.0 algorithm is accessed via:
+  hlsvdpro.hlsvd()     for version 1.x API, or
+  hlsvdpro.hlsvdpro()  for version 2.x API, or
+  
+See the help string for further information on the API.
+
+HLSVDPRO provides access to the underlying PROPACK SVD algorithms via:
+  hlsvdpro.propack()
+
+
+Version 1.0.1 - 12 April 2017
+------------------------------------------------------------------------------
+This release contains a few small changes --
+ - Re-added missing constants.
+ - Removed demo code from distribution
+ - Fix a Fortran bug that reportedly causes a segfault:
+   https://scion.duhs.duke.edu/vespa/hlsvdpro/ticket/1
+
+
+Version 1.0.0 - 6 April 2017
+------------------------------------------------------------------------------
+This is the first release of HLSVDPRO as an independent package. Previously, it
+had been included as a sub-package of the Vespa - Versatile Simulation Pulses
+and Analysis package at Duke University for magnetic resonance spectroscopy
+spectral simulation and processing. We split it off as a standalone package to
+make it more generally available.
+
+HLSVDPRO version 1.0.x was implemented based on the paper by W.W.F. Pijnappel, 
+A. van den Boogaart, R. de Beer, D. van Ormondt, J. Magn. Reson. 97, 122 (1992)
+and made use of code from PROPACK version 1.x. It requires the fftw library, 
+which is included as part of this version of the package.
+
+HLSVDPRO version 1.0.x is compatible with Python 2.7 and 3.x. The binaries
+that the Python wrapper calls are 64-bit, so this code is not compatible with
+32-bit Python. 
+

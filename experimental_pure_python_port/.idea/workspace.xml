@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="54bd52d5-e305-497b-afe8-279e624e4bc0" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ProjectId" id="1aY74paH32vsH42aOSendHs1C89" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="settings.editor.selected.configurable" value="PyScientificConfigurable" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Users\bsoher\code\repository_svn\hlsvdpro\experimental_pure_python_port" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Python.hlsvdpro_propack">
+    <configuration name="hlsvdpro_propack" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="experimental_pure_python_port" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/hlsvdpro_propack.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="test" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="experimental_pure_python_port" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="test_zlansvd" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="experimental_pure_python_port" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test_zlansvd.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.hlsvdpro_propack" />
+        <item itemvalue="Python.test" />
+        <item itemvalue="Python.test_zlansvd" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="54bd52d5-e305-497b-afe8-279e624e4bc0" name="Default Changelist" comment="" />
+      <created>1586900484762</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1586900484762</updated>
+      <workItem from="1586900487890" duration="2087000" />
+      <workItem from="1586995561155" duration="3846000" />
+      <workItem from="1587061107288" duration="2516000" />
+      <workItem from="1587128893970" duration="6513000" />
+      <workItem from="1587145658328" duration="331000" />
+      <workItem from="1587146740204" duration="502000" />
+      <workItem from="1587228270154" duration="1956000" />
+      <workItem from="1587300025749" duration="689000" />
+      <workItem from="1587341841147" duration="1959000" />
+      <workItem from="1587344915912" duration="1626000" />
+      <workItem from="1587474636583" duration="424000" />
+      <workItem from="1587494213934" duration="608000" />
+      <workItem from="1587495214280" duration="97000" />
+      <workItem from="1587519854678" duration="753000" />
+      <workItem from="1587573349234" duration="4442000" />
+      <workItem from="1587582864315" duration="47000" />
+      <workItem from="1589835480096" duration="9000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="1726" y="201" width="982" height="582" key="#xdebugger.evaluate" timestamp="1586999525766">
+      <screen x="0" y="0" width="2752" height="1112" />
+    </state>
+    <state x="1726" y="201" width="982" height="582" key="#xdebugger.evaluate/0.0.2752.1112@0.0.2752.1112" timestamp="1586999525766" />
+    <state width="1834" height="438" key="DebuggerActiveHint" timestamp="1587343585483">
+      <screen x="0" y="0" width="2752" height="1112" />
+    </state>
+    <state width="1834" height="438" key="DebuggerActiveHint/0.0.2752.1112@0.0.2752.1112" timestamp="1587343585483" />
+    <state width="1546" height="296" key="GridCell.Tab.0.bottom" timestamp="1587582779428">
+      <screen x="0" y="0" width="2752" height="1112" />
+    </state>
+    <state width="1546" height="296" key="GridCell.Tab.0.bottom/0.0.2752.1112@0.0.2752.1112" timestamp="1587582779428" />
+    <state width="1546" height="296" key="GridCell.Tab.0.center" timestamp="1587582779428">
+      <screen x="0" y="0" width="2752" height="1112" />
+    </state>
+    <state width="1546" height="296" key="GridCell.Tab.0.center/0.0.2752.1112@0.0.2752.1112" timestamp="1587582779428" />
+    <state width="1546" height="296" key="GridCell.Tab.0.left" timestamp="1587582779428">
+      <screen x="0" y="0" width="2752" height="1112" />
+    </state>
+    <state width="1546" height="296" key="GridCell.Tab.0.left/0.0.2752.1112@0.0.2752.1112" timestamp="1587582779428" />
+    <state width="1546" height="296" key="GridCell.Tab.0.right" timestamp="1587582779428">
+      <screen x="0" y="0" width="2752" height="1112" />
+    </state>
+    <state width="1546" height="296" key="GridCell.Tab.0.right/0.0.2752.1112@0.0.2752.1112" timestamp="1587582779428" />
+    <state width="1590" height="428" key="GridCell.Tab.1.bottom" timestamp="1587521583053">
+      <screen x="0" y="0" width="2752" height="1112" />
+    </state>
+    <state width="1590" height="428" key="GridCell.Tab.1.bottom/0.0.2752.1112@0.0.2752.1112" timestamp="1587521583053" />
+    <state width="1590" height="428" key="GridCell.Tab.1.center" timestamp="1587521583052">
+      <screen x="0" y="0" width="2752" height="1112" />
+    </state>
+    <state width="1590" height="428" key="GridCell.Tab.1.center/0.0.2752.1112@0.0.2752.1112" timestamp="1587521583052" />
+    <state width="1590" height="428" key="GridCell.Tab.1.left" timestamp="1587521583052">
+      <screen x="0" y="0" width="2752" height="1112" />
+    </state>
+    <state width="1590" height="428" key="GridCell.Tab.1.left/0.0.2752.1112@0.0.2752.1112" timestamp="1587521583052" />
+    <state width="1590" height="428" key="GridCell.Tab.1.right" timestamp="1587521583053">
+      <screen x="0" y="0" width="2752" height="1112" />
+    </state>
+    <state width="1590" height="428" key="GridCell.Tab.1.right/0.0.2752.1112@0.0.2752.1112" timestamp="1587521583053" />
+    <state x="1775" y="168" key="SettingsEditor" timestamp="1587574819853">
+      <screen x="0" y="0" width="2752" height="1112" />
+    </state>
+    <state x="1775" y="168" key="SettingsEditor/0.0.2752.1112@0.0.2752.1112" timestamp="1587574819853" />
+    <state x="957" y="272" key="com.intellij.ide.util.TipDialog" timestamp="1587300107160">
+      <screen x="0" y="0" width="2752" height="1112" />
+    </state>
+    <state x="957" y="272" key="com.intellij.ide.util.TipDialog/0.0.2752.1112@0.0.2752.1112" timestamp="1587300107160" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/test.py</url>
+          <line>112</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/test.py</url>
+          <line>151</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/pypropack.py</url>
+          <line>315</line>
+          <option name="timeStamp" value="9" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/zlansvdw.py</url>
+          <line>724</line>
+          <option name="timeStamp" value="12" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/zlansvdw.py</url>
+          <line>745</line>
+          <option name="timeStamp" value="13" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/test_zlansvd.py</url>
+          <line>51</line>
+          <option name="timeStamp" value="14" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/hlsvdpro_propack.py</url>
+          <line>175</line>
+          <option name="timeStamp" value="21" />
+        </line-breakpoint>
+      </breakpoints>
+      <default-breakpoints>
+        <breakpoint type="python-exception">
+          <properties notifyOnTerminate="true" exception="BaseException">
+            <option name="notifyOnTerminate" value="true" />
+          </properties>
+        </breakpoint>
+      </default-breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/experimental_pure_python_port$test_zlansvd.coverage" NAME="test_zlansvd Coverage Results" MODIFIED="1587474963654" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/experimental_pure_python_port$test.coverage" NAME="test Coverage Results" MODIFIED="1587580121792" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/experimental_pure_python_port$hlsvdpro_propack.coverage" NAME="hlsvdpro_propack Coverage Results" MODIFIED="1587580815176" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+  </component>
+</project>

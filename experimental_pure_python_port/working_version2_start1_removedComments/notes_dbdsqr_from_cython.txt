@@ -1,0 +1,412 @@
+This is the latest draft of a port of HLSVDPRO to Python. In keeping with my intention to "port it like an onion", I started by removing the first two layers. http://scion.duhs.duke.edu/vespa/analysis/wiki/HlsvdPorting
+
+All Fortran files have been ported with two exceptions (see below). 
+
+== Caveats ==
+
+1) There's a small block of code at the end of zlansvdw.f that I didn't port. It's only activated if the input param jobv == 'Y' and it's hardcoded to 'N' in this code. It's just a single call to zgemmina() so if I debug that properly, porting this last call shouldn't be difficult.
+
+2) There's no numpy entry point for the LAPACK function dbdsqr() and it's too complex to be worth re-writing in Python. I'm currently using the version inside the HLSVDPRO library but obviously any binary dependency defeats the main purpose of porting to Python. I'm still trying to figure out how to deal with this.
+
+http://www.netlib.org/lapack/double/dbdsqr.f
+
+== Results ==
+
+Results match the Fortran code for all of the press_cpX files. laser_2010102901.xml goes badly. There's still some bugs in the Python to be worked out, apparently.
+
+
+== Code Organization ==
+
+My Python code is at the top level. The directory 'original' contains source and test files copied from vespa/hlsvd. I've modified the Fortran source to provide a new entry points, a bug fix (see below), and a bazillion print statements to check equivalence with my Python code.
+
+== Performance ==
+Performance is bad; I'm not worried about it yet. 
+
+== Quality ==
+My code is completely unoptimized, wildly messy by any standard and overrun with FIXMEs.
+
+
+
+== Next Steps ==
+
+My next steps are to  --
+- Fix the bugs that cause laser_2010102901.xml to fail
+- Improve performance which is quite bad
+- Figure out how  to eliminate the dependency on dbdsqr()
+
+
+
+===========================================================
+maybe something promising ... 
+
+approach based on: call_dgemm.py
+March 20, 2020 - Brian J Soher
+Found at: https://gist.github.com/insertinterestingnamehere/b50390fc720e1e554af0
+
+
+call_dgemm.py
+----------------------------
+# This shows how to use SciPy's Cython-exposure of the BLAS and LAPACK libraries from within ctypes
+
+Here's the doc entry on LAPACK DBDSQR
+
+      SUBROUTINE DBDSQR( UPLO, N, NCVT, NRU, NCC, D, E, VT, LDVT, U,
+     $                   LDU, C, LDC, WORK, INFO )
+*
+*  -- LAPACK routine (version 3.2) --
+*  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+*  -- Univ. of California Berkeley, Univ. of Colorado Denver and NAG Ltd..--
+*     January 2007
+*
+*     .. Scalar Arguments ..
+      CHARACTER          UPLO
+      INTEGER            INFO, LDC, LDU, LDVT, N, NCC, NCVT, NRU
+*     ..
+*     .. Array Arguments ..
+      DOUBLE PRECISION   C( LDC, * ), D( * ), E( * ), U( LDU, * ),
+     $                   VT( LDVT, * ), WORK( * )
+*     ..
+*
+*  Purpose
+*  =======
+*
+*  DBDSQR computes the singular values and, optionally, the right and/or
+*  left singular vectors from the singular value decomposition (SVD) of
+*  a real N-by-N (upper or lower) bidiagonal matrix B using the implicit
+*  zero-shift QR algorithm.  The SVD of B has the form
+* 
+*     B = Q * S * P**T
+* 
+*  where S is the diagonal matrix of singular values, Q is an orthogonal
+*  matrix of left singular vectors, and P is an orthogonal matrix of
+*  right singular vectors.  If left singular vectors are requested, this
+*  subroutine actually returns U*Q instead of Q, and, if right singular
+*  vectors are requested, this subroutine returns P**T*VT instead of
+*  P**T, for given real input matrices U and VT.  When U and VT are the
+*  orthogonal matrices that reduce a general matrix A to bidiagonal
+*  form:  A = U*B*VT, as computed by DGEBRD, then
+*
+*     A = (U*Q) * S * (P**T*VT)
+*
+*  is the SVD of A.  Optionally, the subroutine may also compute Q**T*C
+*  for a given real input matrix C.
+*
+*  See "Computing  Small Singular Values of Bidiagonal Matrices With
+*  Guaranteed High Relative Accuracy," by J. Demmel and W. Kahan,
+*  LAPACK Working Note #3 (or SIAM J. Sci. Statist. Comput. vol. 11,
+*  no. 5, pp. 873-912, Sept 1990) and
+*  "Accurate singular values and differential qd algorithms," by
+*  B. Parlett and V. Fernando, Technical Report CPAM-554, Mathematics
+*  Department, University of California at Berkeley, July 1992
+*  for a detailed description of the algorithm.
+*
+*  Arguments
+*  =========
+*
+*  UPLO    (input) CHARACTER*1
+*          = 'U':  B is upper bidiagonal;
+*          = 'L':  B is lower bidiagonal.
+*
+*  N       (input) INTEGER
+*          The order of the matrix B.  N >= 0.
+*
+*  NCVT    (input) INTEGER
+*          The number of columns of the matrix VT. NCVT >= 0.
+*
+*  NRU     (input) INTEGER
+*          The number of rows of the matrix U. NRU >= 0.
+*
+*  NCC     (input) INTEGER
+*          The number of columns of the matrix C. NCC >= 0.
+*
+*  D       (input/output) DOUBLE PRECISION array, dimension (N)
+*          On entry, the n diagonal elements of the bidiagonal matrix B.
+*          On exit, if INFO=0, the singular values of B in decreasing
+*          order.
+*
+*  E       (input/output) DOUBLE PRECISION array, dimension (N-1)
+*          On entry, the N-1 offdiagonal elements of the bidiagonal
+*          matrix B. 
+*          On exit, if INFO = 0, E is destroyed; if INFO > 0, D and E
+*          will contain the diagonal and superdiagonal elements of a
+*          bidiagonal matrix orthogonally equivalent to the one given
+*          as input.
+*
+*  VT      (input/output) DOUBLE PRECISION array, dimension (LDVT, NCVT)
+*          On entry, an N-by-NCVT matrix VT.
+*          On exit, VT is overwritten by P**T * VT.
+*          Not referenced if NCVT = 0.
+*
+*  LDVT    (input) INTEGER
+*          The leading dimension of the array VT.
+*          LDVT >= max(1,N) if NCVT > 0; LDVT >= 1 if NCVT = 0.
+*
+*  U       (input/output) DOUBLE PRECISION array, dimension (LDU, N)
+*          On entry, an NRU-by-N matrix U.
+*          On exit, U is overwritten by U * Q.
+*          Not referenced if NRU = 0.
+*
+*  LDU     (input) INTEGER
+*          The leading dimension of the array U.  LDU >= max(1,NRU).
+*
+*  C       (input/output) DOUBLE PRECISION array, dimension (LDC, NCC)
+*          On entry, an N-by-NCC matrix C.
+*          On exit, C is overwritten by Q**T * C.
+*          Not referenced if NCC = 0.
+*
+*  LDC     (input) INTEGER
+*          The leading dimension of the array C.
+*          LDC >= max(1,N) if NCC > 0; LDC >=1 if NCC = 0.
+*
+*  WORK    (workspace) DOUBLE PRECISION array, dimension (4*N)
+*
+*  INFO    (output) INTEGER
+*          = 0:  successful exit
+*          < 0:  If INFO = -i, the i-th argument had an illegal value
+*          > 0:
+*             if NCVT = NRU = NCC = 0,
+*                = 1, a split was marked by a positive value in E
+*                = 2, current block of Z not diagonalized after 30*N
+*                     iterations (in inner while loop)
+*                = 3, termination criterion of outer while loop not met 
+*                     (program created more than N unreduced blocks)
+*             else NCVT = NRU = NCC = 0,
+*                   the algorithm did not converge; D and E contain the
+*                   elements of a bidiagonal matrix which is orthogonally
+*                   similar to the input matrix B;  if INFO = i, i
+*                   elements of E have not converged to zero.
+*
+*  Internal Parameters
+*  ===================
+*
+*  TOLMUL  DOUBLE PRECISION, default = max(10,min(100,EPS**(-1/8)))
+*          TOLMUL controls the convergence criterion of the QR loop.
+*          If it is positive, TOLMUL*EPS is the desired relative
+*             precision in the computed singular values.
+*          If it is negative, abs(TOLMUL*EPS*sigma_max) is the
+*             desired absolute accuracy in the computed singular
+*             values (corresponds to relative accuracy
+*             abs(TOLMUL*EPS) in the largest singular value.
+*          abs(TOLMUL) should be between 1 and 1/EPS, and preferably
+*             between 10 (for fast convergence) and .1/EPS
+*             (for there to be some accuracy in the results).
+*          Default is to lose at either one eighth or 2 of the
+*             available decimal digits in each computed singular value
+*             (whichever is smaller).
+*
+*  MAXITR  INTEGER, default = 6
+*          MAXITR controls the maximum number of passes of the
+*          algorithm through its inner loop. The algorithms stops
+*          (and so fails to converge) if the number of passes
+*          through the inner loop exceeds MAXITR*N**2.
+*
+*  =====================================================================
+
+
+--------------------------------
+import numpy as np
+import ctypes as ct
+from scipy.linalg import cython_lapack
+
+ct.pythonapi.PyCapsule_GetPointer.restype = ct.c_void_p
+ct.pythonapi.PyCapsule_GetPointer.argtypes = [ct.py_object, ct.c_char_p]
+ct.pythonapi.PyCapsule_GetName.restype = ct.c_char_p
+ct.pythonapi.PyCapsule_GetName.argtypes = [ct.py_object]
+
+# SUBROUTINE DBDSQR( UPLO, N, NCVT, NRU, NCC, D, E, VT, LDVT, U, LDU, C, LDC, WORK, INFO )
+
+ptr_type = ct.CFUNCTYPE(ct.c_void_p, 
+                        ct.c_char_p, 
+                        ct.POINTER(ct.c_int), 
+                        ct.POINTER(ct.c_int), 
+                        ct.POINTER(ct.c_int), 
+                        ct.POINTER(ct.c_int), 
+                        ct.POINTER(ct.c_double),
+                        ct.POINTER(ct.c_double),
+                        ct.POINTER(ct.c_double),
+                        ct.POINTER(ct.c_int), 
+                        ct.POINTER(ct.c_double),
+                        ct.POINTER(ct.c_int), 
+                        ct.POINTER(ct.c_double),
+                        ct.POINTER(ct.c_int), 
+                        ct.POINTER(ct.c_double),
+                        ct.POINTER(ct.c_int))
+dbdsqr2 = ptr_type(
+             ct.pythonapi.PyCapsule_GetPointer(
+                 cython_lapack.__pyx_capi__['dbdsqr'],
+                 ct.pythonapi.PyCapsule_GetName(
+                     cython_lapack.__pyx_capi__['dbdsqr'])))
+
+
+# Example from https://www.nag.com/numeric/fl/nagdoc_fl26.2/html/f08/f08mef.html
+#
+# INPUTS from https://www.nag.com/numeric/fl/nagdoc_fl26.2/examples/data/f08mefe.d.html
+#        and  https://www.nag.com/numeric/fl/nagdoc_fl26.2/examples/source/f08mefe.f90.html
+#
+#
+
+#
+# RESULTS from https://www.nag.com/numeric/fl/nagdoc_fl26.2/examples/baseresults/f08mefe.r.html
+#
+# Singular values
+#     4.0001  3.0006  1.9960  0.9998
+#
+# Right singular vectors, by row
+#          1       2       3       4
+# 1   0.8261  0.5246  0.2024  0.0369
+# 2   0.4512 -0.4056 -0.7350 -0.3030
+# 3   0.2823 -0.5644  0.1731  0.7561
+# 4   0.1852 -0.4916  0.6236 -0.5789
+#
+# Left singular vectors, by column
+#          1       2       3       4
+# 1   0.9129  0.3740  0.1556  0.0512
+# 2  -0.3935  0.7005  0.5489  0.2307
+# 3   0.1081 -0.5904  0.6173  0.5086
+# 4  -0.0132  0.1444 -0.5417  0.8280
+
+n    = 4
+ldc  = 1
+ldu  = n
+ldvt = n
+ncc  = 0
+ncvt = n
+nru  = n    # from input to dbdsqr()
+
+d  = np.array([3.62, -2,41, 1.92, -1.43], 'd', order='F')
+e  = np.array([1.26, -1.53, 1.19],        'd', order='F')
+vt = np.eye(  [ldvt,ncvt],                'd', order='F')
+u  = np.eye(  [ldu, n],                   'd', order='F')
+c  = np.zeros([ldc, 1],                   'd', order='F')   # hard coded to ldc,1 in example
+
+work = np.zeros([4*n,], 'd', order='F')
+
+uplo = ct.c_char('U')
+n    = ct.c_int(n)
+ncvt = ct.c_int(ncvt)
+nru  = ct.c_int(nru)
+ncc  = ct.c_int(ncc)
+ldvt = ct.c_int(ldvt)
+ldu  = ct.c_int(ldu)
+ldc  = ct.c_int(ldc)
+info = ct.c_int(0)
+
+args = (ct.byref(uplo), ct.byref(n), ct.byref(ncvt), ct.byref(nru), ct.byref(ncc),
+        d.ctypes.data_as(ct.POINTER(ct.c_double)),
+        e.ctypes.data_as(ct.POINTER(ct.c_double)),
+        vt.ctypes.data_as(ct.POINTER(ct.c_double)), ct.byref(ldvt),
+        u.ctypes.data_as(ct.POINTER(ct.c_double)), ct.byref(ldu),
+        c.ctypes.data_as(ct.POINTER(ct.c_double)), ct.byref(ldc),
+        work.ctypes.data_as(ct.POINTER(ct.c_double)),
+        ct.byref(info))
+
+dbdsqr2(*args)
+
+
+print("info = ", str(info))
+print(" ")
+print("singular values = ", str(d[0:n]) )
+print(" ")
+print("Right singular vectors, by row ")
+print(str(vt[0:n]))
+print(" ")
+print("Left singular vectors, by column ")
+print(str(u[0:n]))
+
+bob = 10
+bob += 1
+#print a.dot(b)
+
+#--------------------------------------------
+HEre is a C example for using DGEMM
+#--------------------------------------------
+
+/* C source code is found in dgemm_example.c */
+
+#define min(x,y) (((x) < (y)) ? (x) : (y))
+
+#include <stdio.h>
+#include <stdlib.h>
+#include "mkl.h"
+
+int main()
+{
+    double *A, *B, *C;
+    int m, n, k, i, j;
+    double alpha, beta;
+
+    printf ("\n This example computes real matrix C=alpha*A*B+beta*C using \n"
+            " Intel(R) MKL function dgemm, where A, B, and  C are matrices and \n"
+            " alpha and beta are double precision scalars\n\n");
+
+    m = 2000, k = 200, n = 1000;
+    printf (" Initializing data for matrix multiplication C=A*B for matrix \n"
+            " A(%ix%i) and matrix B(%ix%i)\n\n", m, k, k, n);
+    alpha = 1.0; beta = 0.0;
+
+    printf (" Allocating memory for matrices aligned on 64-byte boundary for better \n"
+            " performance \n\n");
+    A = (double *)mkl_malloc( m*k*sizeof( double ), 64 );
+    B = (double *)mkl_malloc( k*n*sizeof( double ), 64 );
+    C = (double *)mkl_malloc( m*n*sizeof( double ), 64 );
+    if (A == NULL || B == NULL || C == NULL) {
+      printf( "\n ERROR: Can't allocate memory for matrices. Aborting... \n\n");
+      mkl_free(A);
+      mkl_free(B);
+      mkl_free(C);
+      return 1;
+    }
+
+    printf (" Intializing matrix data \n\n");
+    for (i = 0; i < (m*k); i++) {
+        A[i] = (double)(i+1);
+    }
+
+    for (i = 0; i < (k*n); i++) {
+        B[i] = (double)(-i-1);
+    }
+
+    for (i = 0; i < (m*n); i++) {
+        C[i] = 0.0;
+    }
+
+    printf (" Computing matrix product using Intel(R) MKL dgemm function via CBLAS interface \n\n");
+    cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, 
+                m, n, k, alpha, A, k, B, n, beta, C, n);
+    printf ("\n Computations completed.\n\n");
+
+    printf (" Top left corner of matrix A: \n");
+    for (i=0; i<min(m,6); i++) {
+      for (j=0; j<min(k,6); j++) {
+        printf ("%12.0f", A[j+i*k]);
+      }
+      printf ("\n");
+    }
+
+    printf ("\n Top left corner of matrix B: \n");
+    for (i=0; i<min(k,6); i++) {
+      for (j=0; j<min(n,6); j++) {
+        printf ("%12.0f", B[j+i*n]);
+      }
+      printf ("\n");
+    }
+    
+    printf ("\n Top left corner of matrix C: \n");
+    for (i=0; i<min(m,6); i++) {
+      for (j=0; j<min(n,6); j++) {
+        printf ("%12.5G", C[j+i*n]);
+      }
+      printf ("\n");
+    }
+
+    printf ("\n Deallocating memory \n\n");
+    mkl_free(A);
+    mkl_free(B);
+    mkl_free(C);
+
+    printf (" Example completed. \n\n");
+    return 0;
+}
+
+
+

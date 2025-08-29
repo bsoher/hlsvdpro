@@ -1,0 +1,6 @@
+include hlsvdpro/bin/*
+
+# Exclude OS X hidden file. Without the line below, when running this under
+# OS X .DS_Store would be included if it appears in any directory included
+# with a *.
+global-exclude  .DS_Store

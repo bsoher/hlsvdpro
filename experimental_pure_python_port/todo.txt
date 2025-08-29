@@ -1,0 +1,12 @@
+Don't forget -- 
+-- bug in zlansvdw.f, needs to pass lzwrk and use that in "Set pointers into work array" (lwrk = lzwrk-iwrk+1)
+
+-- bug in call to zgemmina? once again, conflating lwrk and lzwrk:
+               call zgemmina(n,j,j,V,ldv,
+     c           work(iq),lanmax,zwork(iwrk),lwrk) 
+
+
+
+- address FIXMEs
+- Lots of places where I provide an array bound (e.g. uuu[:, :n]) where it's probably not necessary because the array is already of size N. This is a leftover from the Fortran code where every array length & index has to be specified explicitly.
+- document coding style, variable name choices

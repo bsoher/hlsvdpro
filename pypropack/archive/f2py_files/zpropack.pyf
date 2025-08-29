@@ -1,0 +1,256 @@
+!    -*- f90 -*-
+! Note: the context of this file is case sensitive.
+
+python module __user__routines 
+    interface
+	function zaprod(transa,m,n,x,y,zparm,iparm)
+           character*1 :: transa
+           integer intent(in) :: m
+	   integer intent(in) :: n
+           complex*16 intent(in),dimension((transa[0] == 'n' ? n : m)) :: x
+	   complex*16 intent(in,out),dimension((transa[0] == 'n' ? m : n)) :: y
+	   integer dimension(*) :: iparm
+	   complex*16 dimension(*) :: zparm
+        end function caprod
+    end interface
+end python module __user__routines
+
+
+python module _zpropack ! in 
+    interface  ! in :_zpropack
+        subroutine zlansvd_aprod(a,jobu,jobv,m,n,k,kmax,u,ldu,sigma,bnd,v,ldv,tolin,work,lwork,zwork,lzwrk,iwork,liwork,doption,ioption,info,zparm,iparm) ! in :_zpropack:zlansvd_aprod.F
+            complex*16, target,dimension(m,n),intent(in) :: a
+            character*1 intent(in) :: jobu
+            character*1 intent(in) :: jobv
+            integer, optional,intent(in),check(shape(a,0)==m),depend(a) :: m=shape(a,0)
+            integer, optional,intent(in),check(shape(a,1)==n),depend(a) :: n=shape(a,1)
+            integer intent(in) :: k
+            integer, optional,intent(in),check((shape(u,1)-1)==kmax),depend(u) :: kmax=(shape(u,1)-1)
+            complex*16 dimension(ldu,kmax + 1),intent(in,out) :: u
+            integer, optional,check(shape(u,0)==ldu),depend(u) :: ldu=shape(u,0)
+            double precision dimension(k),intent(out),depend(k) :: sigma
+            double precision dimension(k),intent(out),depend(k) :: bnd
+            complex*16 dimension(ldv,kmax),intent(in,out),depend(kmax) :: v
+            integer, optional,check(shape(v,0)==ldv),depend(v) :: ldv=shape(v,0)
+            double precision intent(in) :: tolin
+            double precision dimension(lwork),intent(in) :: work
+            integer, optional,check(len(work)>=lwork),depend(work) :: lwork=len(work)
+            complex*16 dimension(lzwrk),intent(in) :: zwork
+            integer, optional,check(len(zwork)>=lzwrk),depend(zwork) :: lzwrk=len(zwork)
+            integer dimension(liwork),intent(in) :: iwork
+            integer, optional,check(len(iwork)>=liwork),depend(iwork) :: liwork=len(iwork)
+            double precision dimension(3),intent(in) :: doption
+            integer dimension(2),intent(in) :: ioption
+            integer intent(out) :: info
+            complex*16 dimension(*),intent(in) :: zparm
+            integer dimension(*),intent(in) :: iparm
+            integer :: nopx
+            integer :: nreorth
+            integer :: ndot
+            integer :: nreorthu
+            integer :: nreorthv
+            integer :: nitref
+            integer :: nrestart
+            integer :: nbsvd
+            real :: tmvopx
+            real :: tgetu0
+            real :: tupdmu
+            real :: tupdnu
+            real :: tintv
+            real :: tlanbpro
+            real :: treorth
+            real :: treorthu
+            real :: treorthv
+            real :: telru
+            real :: telrv
+            real :: tbsvd
+            real :: tnorm2
+            real :: tlansvd
+            integer :: nlandim
+            real :: tritzvec
+            real :: trestart
+            real :: tdot
+            integer :: nsing
+            common /timing/ nopx,nreorth,ndot,nreorthu,nreorthv,nitref,nrestart,nbsvd,tmvopx,tgetu0,tupdmu,tupdnu,tintv,tlanbpro,treorth,treorthu,treorthv,telru,telrv,tbsvd,tnorm2,tlansvd,nlandim,tritzvec,trestart,tdot,nsing
+        end subroutine zlansvd_aprod
+
+        subroutine zlansvd_irl_aprod(a,which,jobu,jobv,m,n,dim,p,neig,maxiter,u,ldu,sigma,bnd,v,ldv,tolin,work,lwork,zwork,lzwrk,iwork,liwork,doption,ioption,info,zparm,iparm) ! in :_zpropack:zlansvd_irl_aprod.F
+            complex*16, target,dimension(m,n),intent(in) :: a
+            character*1 intent(in) :: which
+            character*1 intent(in) :: jobu
+            character*1 intent(in) :: jobv
+            integer, optional,intent(in),check(shape(a,0)==m),depend(a) :: m=shape(a,0)
+            integer, optional,intent(in),check(shape(a,1)==n),depend(a) :: n=shape(a,1)
+            integer, optional,intent(in),check((shape(u,1)-1)==dim),depend(u) :: dim=(shape(u,1)-1)
+            integer intent(in) :: p
+            integer intent(in) :: neig
+            integer intent(in) :: maxiter
+            complex*16 dimension(ldu,dim + 1),intent(in,out) :: u
+            integer, optional,check(shape(u,0)==ldu),depend(u) :: ldu=shape(u,0)
+            double precision dimension(neig),intent(out),depend(neig) :: sigma
+            double precision dimension(neig),intent(out),depend(neig) :: bnd
+            complex*16 dimension(ldv,dim),intent(in,out),depend(dim) :: v
+            integer, optional,check(shape(v,0)==ldv),depend(v) :: ldv=shape(v,0)
+            double precision intent(in) :: tolin
+            double precision dimension(lwork),intent(in) :: work
+            integer, optional,check(len(work)>=lwork),depend(work) :: lwork=len(work)
+            complex*16 dimension(lzwrk),intent(in) :: zwork
+            integer, optional,check(len(zwork)>=lzwrk),depend(zwork) :: lzwrk=len(zwork)
+            integer dimension(liwork),intent(in) :: iwork
+            integer, optional,check(len(iwork)>=liwork),depend(iwork) :: liwork=len(iwork)
+            double precision dimension(4),intent(in) :: doption
+            integer dimension(2),intent(in) :: ioption
+            integer intent(out) :: info
+            complex*16 dimension(*),intent(in) :: zparm
+            integer dimension(*),intent(in) :: iparm
+            integer :: nopx
+            integer :: nreorth
+            integer :: ndot
+            integer :: nreorthu
+            integer :: nreorthv
+            integer :: nitref
+            integer :: nrestart
+            integer :: nbsvd
+            real :: tmvopx
+            real :: tgetu0
+            real :: tupdmu
+            real :: tupdnu
+            real :: tintv
+            real :: tlanbpro
+            real :: treorth
+            real :: treorthu
+            real :: treorthv
+            real :: telru
+            real :: telrv
+            real :: tbsvd
+            real :: tnorm2
+            real :: tlansvd
+            integer :: nlandim
+            real :: tritzvec
+            real :: trestart
+            real :: tdot
+            integer :: nsing
+            common /timing/ nopx,nreorth,ndot,nreorthu,nreorthv,nitref,nrestart,nbsvd,tmvopx,tgetu0,tupdmu,tupdnu,tintv,tlanbpro,treorth,treorthu,treorthv,telru,telrv,tbsvd,tnorm2,tlansvd,nlandim,tritzvec,trestart,tdot,nsing
+        end subroutine zlansvd_irl_aprod
+
+        subroutine zlansvd(jobu,jobv,m,n,k,kmax,aprod,u,ldu,sigma,bnd,v,ldv,tolin,work,lwork,zwork,lzwrk,iwork,liwork,doption,ioption,info,zparm,iparm) ! in :_zpropack:PROPACK/complex16/zlansvd.F
+            use __user__routines, aprod=>zaprod
+            character*1 intent(in) :: jobu
+            character*1 intent(in) :: jobv
+            integer intent(in) :: m
+            integer intent(in) :: n
+            integer intent(in) :: k
+            integer intent(in) :: kmax
+            external aprod
+            complex*16 intent(in,out),dimension(ldu,kmax+1) :: u
+            integer optional,check(shape(u,0)==ldu),depend(u) :: ldu=shape(u,0)
+            double precision intent(out),dimension(k) :: sigma
+            double precision intent(out),dimension(k) :: bnd
+            complex*16 intent(in,out),dimension(ldv,kmax) :: v
+            integer optional,check(shape(v,0)==ldv),depend(v) :: ldv=shape(v,0)
+            double precision intent(in) :: tolin
+            double precision intent(in),dimension(lwork) :: work
+            integer optional,check(len(work)>=lwork),depend(work) :: lwork=len(work)
+            complex*16 intent(in),dimension(lzwrk) :: zwork
+            integer optional,check(len(zwork)>=lzwrk),depend(zwork) :: lzwrk=len(zwork)
+            integer intent(in),dimension(liwork) :: iwork
+            integer optional,check(len(iwork)>=liwork),depend(iwork) :: liwork=len(iwork)
+            double precision intent(in),dimension(3) :: doption
+            integer intent(in),dimension(2) :: ioption
+            integer intent(out) :: info
+            complex*16 intent(in),dimension(*) :: zparm
+            integer intent(in),dimension(*) :: iparm
+            integer :: nopx
+            integer :: nreorth
+            integer :: ndot
+            integer :: nreorthu
+            integer :: nreorthv
+            integer :: nitref
+            integer :: nrestart
+            integer :: nbsvd
+            real :: tmvopx
+            real :: tgetu0
+            real :: tupdmu
+            real :: tupdnu
+            real :: tintv
+            real :: tlanbpro
+            real :: treorth
+            real :: treorthu
+            real :: treorthv
+            real :: telru
+            real :: telrv
+            real :: tbsvd
+            real :: tnorm2
+            real :: tlansvd
+            integer :: nlandim
+            real :: tritzvec
+            real :: trestart
+            real :: tdot
+            integer :: nsing
+            common /timing/ nopx,nreorth,ndot,nreorthu,nreorthv,nitref,nrestart,nbsvd,tmvopx,tgetu0,tupdmu,tupdnu,tintv,tlanbpro,treorth,treorthu,treorthv,telru,telrv,tbsvd,tnorm2,tlansvd,nlandim,tritzvec,trestart,tdot,nsing
+        end subroutine zlansvd
+
+        subroutine zlansvd_irl(which,jobu,jobv,m,n,dim,p,neig,maxiter,aprod,u,ldu,sigma,bnd,v,ldv,tolin,work,lwork,zwork,lzwrk,iwork,liwork,doption,ioption,info,zparm,iparm) ! in :_zpropack:PROPACK/complex16/zlansvd_irl.F
+            use __user__routines, aprod=>zaprod
+            character*1 intent(in) :: which
+            character*1 intent(in) :: jobu
+            character*1 intent(in) :: jobv
+            integer intent(in) :: m
+            integer intent(in) :: n
+            integer intent(in) :: dim
+            integer intent(in) :: p
+            integer intent(in) :: neig
+            integer intent(in) :: maxiter
+            external aprod
+            complex*16 intent(in,out),dimension(ldu,dim+1) :: u
+            integer optional,check(shape(u,0)==ldu),depend(u) :: ldu=shape(u,0)
+            double precision intent(out),dimension(neig) :: sigma
+            double precision intent(out),dimension(neig) :: bnd
+            complex*16 intent(in,out),dimension(ldv,dim) :: v
+            integer optional,check(shape(v,0)==ldv),depend(v) :: ldv=shape(v,0)
+            double precision intent(in) :: tolin
+            double precision intent(in),dimension(lwork) :: work
+            integer optional,check(len(work)>=lwork),depend(work) :: lwork=len(work)
+            complex*16 intent(in),dimension(lzwrk) :: zwork
+            integer optional,check(len(zwork)>=lzwrk),depend(zwork) :: lzwrk=len(zwork)
+            integer intent(in),dimension(liwork) :: iwork
+            integer optional,check(len(iwork)>=liwork),depend(iwork) :: liwork=len(iwork)
+            double precision intent(in),dimension(4) :: doption
+            integer intent(in),dimension(2) :: ioption
+            integer intent(out) :: info
+            complex*16 intent(in),dimension(*) :: zparm
+            integer intent(in),dimension(*) :: iparm
+            integer :: nopx
+            integer :: nreorth
+            integer :: ndot
+            integer :: nreorthu
+            integer :: nreorthv
+            integer :: nitref
+            integer :: nrestart
+            integer :: nbsvd
+            real :: tmvopx
+            real :: tgetu0
+            real :: tupdmu
+            real :: tupdnu
+            real :: tintv
+            real :: tlanbpro
+            real :: treorth
+            real :: treorthu
+            real :: treorthv
+            real :: telru
+            real :: telrv
+            real :: tbsvd
+            real :: tnorm2
+            real :: tlansvd
+            integer :: nlandim
+            real :: tritzvec
+            real :: trestart
+            real :: tdot
+            integer :: nsing
+            common /timing/ nopx,nreorth,ndot,nreorthu,nreorthv,nitref,nrestart,nbsvd,tmvopx,tgetu0,tupdmu,tupdnu,tintv,tlanbpro,treorth,treorthu,treorthv,telru,telrv,tbsvd,tnorm2,tlansvd,nlandim,tritzvec,trestart,tdot,nsing
+        end subroutine zlansvd_irl
+    end interface 
+end python module _zpropack
+
+! This file was auto-generated with f2py (version:2).
+! See http://cens.ioc.ee/projects/f2py2e/
