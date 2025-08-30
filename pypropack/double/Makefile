@@ -33,7 +33,7 @@ PYVER := $(PYMAJ).$(PYMIN)
 PYVER2 := $(PYMAJ)$(PYMIN)
 
 
-F2PY_IFLAGS = -I$(PYDIR)lib/site-packages/numpy/core/include -I$(PYDIR)include -I$(PYDIR)lib/site-packages/numpy/_core/include
+F2PY_IFLAGS = -I$(PYDIR)lib/site-packages/numpy/core/include -I$(PYDIR)include
 F2PY_CFLAGS = -g -DDEBUG -DMS_WIN64 -O0 -Wall -Wstrict-prototypes $(F2PY_IFLAGS)
 F2PY_FFLAGS = -Wall -g -ffixed-form -fno-second-underscore -O3 -funroll-loops $(F2PY_IFLAGS)
 

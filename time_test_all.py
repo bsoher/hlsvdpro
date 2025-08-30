@@ -185,6 +185,6 @@ if __name__ == "__main__":
     p = ps.Stats('profile.data')
     p.strip_dirs().sort_stats('cumulative').print_stats()
 
-    test(plot_flag=True)
+    #test(plot_flag=True)
 
 
