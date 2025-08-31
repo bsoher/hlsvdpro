@@ -94,7 +94,7 @@ def dbdsqr(uplo, n, ncvt, nru, ncc, ddd, eee, vt, ldvt, uuu, ldu, ccc, ldc):
     info = 0
 
 
-    uplo = ctypes.c_char(uplo)
+    uplo = ctypes.c_char(uplo.encode('utf-8'))
     n = ctypes.c_long(n)
     ncvt = ctypes.c_long(ncvt)
     nru = ctypes.c_long(nru)
@@ -249,7 +249,7 @@ def dbdsqr_cython(uplo, n, ncvt, nru, ncc, ddd, eee, vt, ldvt, uuu, ldu, ccc, ld
 
     info = 0
 
-    uplo = ctypes.c_char(uplo)
+    uplo = ctypes.c_char(uplo.encode('utf-8'))
     n    = ctypes.c_int(n)
     ncvt = ctypes.c_int(ncvt)
     nru  = ctypes.c_int(nru)

@@ -23,7 +23,7 @@ def _get_predictable_randoms(size):
     """
     lines = open('first_random.txt').read().split('\n')
     lines = [ 'complex' + line for line in lines]
-    lines = map(eval, lines)
+    lines = [eval(item) for item in lines]
     lines = lines[:size]
     
     return np.array(lines)

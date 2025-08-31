@@ -63,7 +63,7 @@ dlamch, = scipy.linalg.lapack.get_lapack_funcs( ['lamch'],
 
 
 def fortran_range(a, b):
-    the_range = range(a, b)
+    the_range = list(range(a, b))
     if b >= a:
         the_range.append(b)
     return the_range
@@ -329,7 +329,7 @@ def zlanbprow(ndp, m, n, k0, k, uuu, vvv, bbb_a, bbb_b, rnorm,
 
     # indices replaces iwork from the Fortran code. It might not need to be this
     # big.
-    indices = np.zeros( ((2 * MAX_SINGULAR_VALUES) + 1, ), np.int)
+    indices = np.zeros( ((2 * MAX_SINGULAR_VALUES) + 1, ), np.int32)
     
     indices -= 1
 

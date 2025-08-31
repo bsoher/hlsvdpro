@@ -14,7 +14,7 @@ import numpy as np
 
 # Vespa modules
 import hlsvdpro
-# import hlsvd
+import hlsvd
 # import hlsvdpropy
 
 DTOR = np.pi / 180.0
@@ -57,7 +57,7 @@ def test(plot_flag=True):
         result1 = hlsvdpro.hlsvd(data, nsv_sought, dwell_time)
 
     for i in range(reps):
-        result2 = hlsvdpro.hlsvd_v1(data, nsv_sought, dwell_time)
+        result2 = hlsvd.hlsvd(data, nsv_sought, dwell_time)
 
     if result1: pp_result_compare(result1, result2, 'hlsvdpro', 'hlsvd')
 
@@ -180,11 +180,11 @@ if __name__ == "__main__":
     if os.path.exists("profile.data"):
         os.remove("profile.data")
 
-    cProfile.run('test(plot_flag=False)', 'profile.data')
-    import pstats as ps
-    p = ps.Stats('profile.data')
-    p.strip_dirs().sort_stats('cumulative').print_stats()
+    # cProfile.run('test(plot_flag=False)', 'profile.data')
+    # import pstats as ps
+    # p = ps.Stats('profile.data')
+    # p.strip_dirs().sort_stats('cumulative').print_stats()
 
-    #test(plot_flag=True)
+    test(plot_flag=True)
 
 

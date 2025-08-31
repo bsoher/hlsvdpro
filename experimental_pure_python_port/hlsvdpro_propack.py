@@ -10,9 +10,10 @@ pp=pprint.pprint
 import numpy as np
 import scipy.linalg
 import scipy.sparse.linalg
+import scipy.linalg.lapack as lapack
 
 # Our modules
-import pypropack as pro
+import pypropack
 
 
 
@@ -34,6 +35,9 @@ zgelss, = scipy.linalg.lapack.get_lapack_funcs( ['gelss'],
 # lrow       n_rows             # of rows in the critical work matrix 
 # mcol       n_columns          # of columns in the critical work matrix 
 
+
+# NOTE NOTE NOTE
+# this module is basically the same as an import/call to hlsvdpro (just older/messier)
 
 def hlsvdpro_propack(signals, nsv_sought, M=None):
 
@@ -59,7 +63,7 @@ def hlsvdpro_propack(signals, nsv_sought, M=None):
         # ...
         # x_M   x_M-1 ... x_0
 
-    U, s, Vh = pro.svdp_aprod(X, K)
+    U, s, Vh = pypropack.svdp_aprod(X, K)
     Uk = np.mat(U[:, :K])   # trucated U matrix of rank K
     Ub = Uk[:-1]            # Uk with bottom row removed
     Ut = Uk[1:]             # Uk with top row removed
@@ -84,20 +88,8 @@ def hlsvdpro_propack(signals, nsv_sought, M=None):
     #  Calculation of complex-valued amplitudes , using the
     #  pseudoinverse of the Lrow*kfit Vandermonde matrix zeta.
 
-    zeta = _vanmon(len(signals), roots)       #  First calculate zeta:
-
-    # c     zgells writes solution in space of vector x,
-    # c     but the vector 'signal' is preserved.
-    # c     5-8-99: rcond was -1.0; g77 makes rank = 0!! Not with SUN.
-    # c             So I set rcond = +1.0d-10!!!!
-
-    lwork = 2*K+64*(len(signals)+K)
-
-    r = zgelss(zeta, signals, cond=-1.0, lwork=lwork, overwrite_a=False, overwrite_b=False)
-
-    v2, x2, s2, rank2, _, info2 = r
-
-    # FIXME this code, like the Fortran, ignores possible errors reported in the "info" return value.
+    zeta = np.vander(roots, N=len(signals), increasing=True).T
+    v2, x2, s2, rank2, _, info2 = lapack.zgelss(zeta, signals)
 
     #===============================================================
     # Discard the uneeded values of x.
@@ -111,59 +103,7 @@ def hlsvdpro_propack(signals, nsv_sought, M=None):
 
 
 
-def _vanmon(n_data_points, roots):
-    """ calculates the ndp*kfit Vandermonde matrix zeta. """
 
-    nsv_found = len(roots)
-
-    zeta = np.zeros( (n_data_points, nsv_found), np.complex128)
-    zeta[1, :nsv_found] = (1+0j)
-
-    for j in range(nsv_found):
-        root = roots[j]
-        temp = (1+0j)
-        for i in range(1, n_data_points):
-            temp *= root
-            zeta[i, j] = temp
-
-    return zeta
-
-
-def _zcalc(nsv_found, n_rows, uuu):
-    """
-    Zcalc(kfit,kmax,Lrow,U,zprime,us,unit)
-
-    # PS - zprime is the output of this function
-    # PS - unit is only used in this function
-    # PS - us is only used in this function
-
-    """
-    uuu_sum = np.zeros( (nsv_found, nsv_found), np.complex128)
-
-    m = n_rows
-
-    for i in range(nsv_found):
-        for j in range(nsv_found):
-            tmp = (uuu[:m - 1, i].conjugate() * uuu[1:m, j]).sum()
-            uuu_sum[i][j] = tmp
-
-    sum_ = (uuu[m - 1, :nsv_found].conjugate() * uuu[m - 1, :nsv_found]).sum()
-
-    uot = 1.0 - sum_.real
-    unit = np.zeros( (nsv_found, nsv_found), np.complex128)
-
-    for i in range(nsv_found):
-        for j in range(nsv_found):
-            temp = ((1+0j) if j == i else (0+0j))
-            unit[i, j] = temp + (uuu[m - 1][i].conjugate() * uuu[m - 1][j] / uot)
-
-    zprime = np.zeros( (nsv_found, nsv_found), np.complex128)
-
-    for i in range(nsv_found):
-        for j in range(nsv_found):
-            zprime[i, j] = (unit[i, :nsv_found] * uuu_sum[:nsv_found, j]).sum()
-
-    return zprime
 
 
 def test():

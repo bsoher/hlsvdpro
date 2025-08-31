@@ -79,9 +79,9 @@ def load_the_library(libhlsvd=None):
 
     try:
         libhlsvd = ctypes.CDLL(libhlsvd)
-    except OSError, message:
-        raise OSError, "Unable to load '%s'. The OS reports: %s" % \
-                                (libhlsvd, message)
+    except OSError as e:
+        msg = "Unable to load '%s'. The OS reports: %s" % (libhlsvd, e)
+        raise OSError(msg)
     finally:
         if restore_cwd:
             os.chdir(restore_cwd)

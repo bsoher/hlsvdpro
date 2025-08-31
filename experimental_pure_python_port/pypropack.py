@@ -18,10 +18,12 @@ of partial SVDs of large matrices or linear operators.
 # wrapper by Jake Vanderplas' pypropack. It is available from
 # PyPI in the HLSVDPro package
 
-from __future__ import division, print_function, absolute_import
+#from __future__ import division, print_function, absolute_import
 
 __all__ = ['svdp']
 
+import os
+import sys
 import numpy as np
 from scipy.sparse.linalg import aslinearoperator
 

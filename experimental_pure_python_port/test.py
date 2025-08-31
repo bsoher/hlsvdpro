@@ -1,14 +1,14 @@
 #!/usr/bin/env python
 
 # Python modules
-from __future__ import division
+#from __future__ import division
 import sys
 import xml.etree.cElementTree as ElementTree
 import cProfile
 import os
 import pprint
-from __builtin__ import False
-from pickle import FALSE
+#from __builtin__ import False
+#from pickle import FALSE
 pp=pprint.pprint
 
 # 3rd party modules
@@ -20,7 +20,7 @@ import vespa.common.constants as vespa_constants
 import hlsvdpro_local
 import hlsvdpro_bjs
 import hlsvdpro_scipy
-import hlsvdpro_propack
+import hlsvdpro_propack     # same as hlsvdpro
 
 import hlsvdpro
 
@@ -53,10 +53,10 @@ def test(filename):
 
     observed   = signals[0:hankel_size].copy()
 
-    print 'hankel_size len() // 8 = ' + str(hankel_size)
-    print 'nsv_sought             = ' + str(nsv_sought)
+    print('hankel_size len() // 8 = ' + str(hankel_size))
+    print('nsv_sought             = ' + str(nsv_sought))
 
-    reps = 1         # 4  for time  trial
+    reps = 100         # 4  for time  trial
 
     result1 = []
     result2 = []
@@ -64,13 +64,13 @@ def test(filename):
     result4 = []
 
     for i in range(reps):
-        result1 = hlsvdpro_propack.hlsvdpro_propack(observed, nsv_sought, 256)
-# #        result1 = hlsvdpro_scipy.hlsvdpro_scipy(signals, nsv_sought, hankel_size)
+        result1 = hlsvdpro_propack.hlsvdpro_propack(observed, nsv_sought)
+#        result1 = hlsvdpro_scipy.hlsvdpro_scipy(signals, nsv_sought, hankel_size)
     result1 = convert_result(result1, dwell_time)
        
     # for i in range(reps):
-    #     result2 = hlsvdpro_bjs.hlsvdpro_bjs(observed, nsv_sought, 512)
-    # result2 = convert_result(result2, dwell_time)
+    #     result2 = hlsvdpro_bjs.hlsvdpro_bjs(observed, nsv_sought, 256)
+    # result2 = convert_result(result2[0], dwell_time)
          
     # for i in range(reps):
     #     result3 = hlsvdpro_local.hlsvdpro(observed, nsv_sought, step_size)
@@ -106,7 +106,7 @@ def test(filename):
                 rmse = np.sqrt(np.sum((obs - est) ** 2) / len(obs))
                 nrmse = rmse / max(obs) - min(obs)
             
-                print str(indx)+" - RMSE = %.2f, normalized RMSE = %.2f%%" % (rmse, nrmse / 100)
+                print(str(indx)+" - RMSE = %.2f, normalized RMSE = %.2f%%" % (rmse, nrmse / 100))
 
         import matplotlib.pyplot as plt
 
@@ -255,10 +255,10 @@ def pp_result_compare(res1, res2, id1, id2):
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        #filename = "original/dist/25215695.xml"
+        #filename = "original/dist/25215695.xml"     # 128 pts
         #filename = "original/dist/laser_2010102901.xml"
-        filename = "original/dist/press_cp0.xml"
-        #filename = "original/dist/press_cp5.xml"
+        #filename = "original/dist/press_cp0.xml"
+        filename = "original/dist/press_cp5.xml"
         # print "Please supply the name of the XML data file."
     else:
         filename = sys.argv[1]
@@ -266,11 +266,11 @@ if __name__ == "__main__":
     if os.path.exists("profile.data"):
         os.remove("profile.data")
 
-    test(filename)
+    #test(filename)
      
-    # cProfile.run('test(filename)', 'profile.data')
-    # import pstats as ps
-    # p = ps.Stats('profile.data')
-    # p.strip_dirs().sort_stats('cumulative').print_stats()
+    cProfile.run('test(filename)', 'profile.data')
+    import pstats as ps
+    p = ps.Stats('profile.data')
+    p.strip_dirs().sort_stats('cumulative').print_stats()
 
 
