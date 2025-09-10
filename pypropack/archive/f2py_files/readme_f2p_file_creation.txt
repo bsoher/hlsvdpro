@@ -20,13 +20,14 @@ NB. need to switch names for the 'z', 'c', 's', 'd' prefixes to create in differ
 
 -NB NB NB !!! two wrinkles - both are caused by the auto-magic of the signature file creation step. Both can be solved manually and the *.pyf file saved for (many re-) use.
   1) I had to manually remove the lines that refer to pointer 'pa' and common block 'common /csvdp/ pa' to make f2py work and create the fortranobject.c file properly. Some issue with complex pointers?  Still a mystery.
-  2) I had to manually change lines with intent(inout) to be intent(in,out) for the results to return to Python correctly. I can not just put them into the Fortran code as intent(in,out) either, the signature file creations balks at that.
+  2) (python 3.8 and maybe 3.9 and 3.10 and older - definitely for numpy 1.xx) I had to manually change lines with intent(inout) to be intent(in,out) for the results to return to Python correctly. I can not just put them into the Fortran code as intent(in,out) either, the signature file creations balks at that.
+  2) (python 3.11 and newer - definitely numpy 2.x - newer f2py call) lines with intent(in,out) were OK, but not automatically added to bottom two functions clansvd() and clansvd_irl(). Same issue for intent(in) and intent(out). Had to bring up OLD version of signature file and WinMerge the two files to determine where to modify.
 
 2. Now we add in the lansvd() and lansvd_irl() functions from the original PROPACK repos.  I don't know how they created these signature files. They have all the needed bells and whistles, but none of the decorators (ie. intent(out), dimension() etc.) are in the fortran files.  So when I just include the lansvd.F and lansvd_irl.F file to the call in Step 1, I get the wrong signatures.  Sigh.  So, we copy and paste the subroutine chunks from zpropack.pyf.Orig into the zpropack.pyf file we created in Step 1.  NB. don't forget to copy the Aprod section, too.
 
 
 
-Compile Notes for SINGLE library
+Compile Notes for SINGLE library - NB. bjs 2025 - build3 local dir option did not work for SINGLE ONLY, mytemp option did work .. weird.
 --------------------------------------------------
 Comand run at cmd line:
 f2py -c spropack.pyf --compiler=mingw32 --fcompiler=gnu95 --build-dir mytemp -include"<setjmpex.h>" -m _spropack slasq2.f slasq3.f slasq4.f slasq5.f slasq6.f slasr.f slasrt.f slassq.f slasv2.f smgs.pentium.F sreorth.F sritzvec.F ssafescal.F stat.h xerbla.f ieeeck.f ilaenv.f lsame.f printstat.F sbdsdc.f sbdsqr.f sblasext.F sbsvd.F second.F sgemm_ovwr.F sgetu0.F slacpy.f slaed6.f slamch.f slamrg.f slanbpro.F slanst.f slansvd.F slansvd_irl.F slapy2.f slarnv.f slartg.f slaruv.f slas2.f slascl.f slasd0.f slasd1.f slasd2.f slasd3.f slasd4.f slasd5.f slasd6.f slasd7.f slasd8.f slasda.f slasdq.f slasdt.f slaset.f slasq1.f snrm2.f srot.f sscal.f sswap.f saxpy.f scopy.f sgemm.f sgemv.f sdot.f saprod.f slansvd_irl_aprod.F slansvd_aprod.F
