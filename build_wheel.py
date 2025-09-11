@@ -31,6 +31,10 @@ def build_wheel(which='ugh',test=False):
         pytag = 'py310'
     elif which == '311':
         pytag = 'py311'
+    elif which == '312':
+        pytag = 'py312'
+    elif which == '313':
+        pytag = 'py313'
     else:
         raise ValueError('Error, python tag not recognized')
         

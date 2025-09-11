@@ -136,9 +136,10 @@ def hlsvdpro(data, nsv_sought, m=None):
 
     u, s, vh = propack.svdp_aprod(x, k)
 
-    uk = np.mat(u[:, :k])  # trucated U matrix of rank K
-    ub = uk[:-1]  # Uk with bottom row removed
-    ut = uk[1:]  # Uk with top row removed
+    #uk = np.mat(u[:, :k])  # trucated U matrix of rank K
+    uk = u[:, :k]       # trucated U matrix of rank K
+    ub = uk[:-1]        # Uk with bottom row removed
+    ut = uk[1:]         # Uk with top row removed
 
     zp, resid, rank, ss = sp.linalg.lstsq(ub, ut)
 
